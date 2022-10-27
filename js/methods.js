@@ -1,5 +1,5 @@
 const methods = {
-    createBtn: (text, isActive, cb) => {
+    createBtn: (text, isActive, eventCallback, elementAction) => {
         const btn = document.createElement("button");
         btn.textContent = text;
         btn.classList.add("pagination-btn");
@@ -8,7 +8,11 @@ const methods = {
             btn.classList.add("pagination-btn--active");
         }
 
-        btn.addEventListener("click", cb);
+        if (typeof elementAction === "function") {
+            elementAction(btn);
+        }
+
+        btn.addEventListener("click", eventCallback);
 
         return btn;
     },
