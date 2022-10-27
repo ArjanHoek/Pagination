@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    color: white;
+}
+
+button {
+    border: none;
+    outline: none;
+}
+
+.pagination {
+    display: flex;
+    gap: 0.1rem;
+}
+
+.pagination-ellipsis {
+    display: inline-flex;
+    color: black;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 0.5rem;
+}
+
+.pagination-btn {
+    background: black;
+    color: inherit;
+    opacity: 0.8;
+    transition: opacity 0.3s, background 0.3s;
+    cursor: pointer;
+}
+
+.pagination-btn.pagination-btn--active {
+    background: green;
+}
+
+.pagination-btn:hover {
+    opacity: 1;
+}
+
+.pagination-btn,
+.pagination-ellipsis {
+    width: 4rem;
+    height: 3rem;
+}
