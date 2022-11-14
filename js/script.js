@@ -1,12 +1,19 @@
 const parent = document.querySelector(".pagination");
 
 const settings = {
-    innerWidth: 7, // Number of items between previous and next buttons (including ellipsis)
+    // innerWidth: 7, // Number of items between previous and next buttons (including ellipsis)
+    preCurrent: 1, // Number of buttons between start ellipsis (if applicable) and active button
 };
 
 (() => {
-    const { createBtn, append, setPage, createEllipsis } = methods;
-    let { innerWidth } = settings;
+    const {
+        createBtn,
+        append,
+        setPage,
+        createEllipsis,
+        calcDefaultPreCurrent,
+    } = methods;
+    let { innerWidth = 7, preCurrent } = settings;
 
     const totalPages = 12;
 
@@ -16,31 +23,38 @@ const settings = {
     (currentPage < 1 || currentPage > totalPages) && (currentPage = 1);
 
     const setPagination = () => {
-        parent.innerHTML = "";
-
-        innerWidth -= 2;
-
-        const preCurrent = Math.floor((innerWidth - 2) / 2);
-
-        const addStartEllipsis = currentPage - preCurrent > 2;
-        const addEndEllipsis =
-            currentPage - preCurrent + innerWidth <= totalPages;
-
-        if (addStartEllipsis) {
-            innerWidth -= 1;
+        // Calculate an automatic default value for preCurrent
+        if (typeof preCurrent != "number") {
+            preCurrent = calcDefaultPreCurrent(innerWidth);
         }
+
+        // Set an initial value from which to start counting page buttons
+        const leftPad = currentPage - preCurrent;
+        let start = leftPad > 3 ? leftPad : 2;
+        const addStartEllipsis = start > 3;
+
+        // Compensate for start ellipsis and first page button
+        if (addStartEllipsis) {
+            innerWidth -= 2;
+        }
+
+        // Decrease the starting value to fit all buttons within the pages range
+        const surplus = start + innerWidth - totalPages;
+        if (surplus > 0) {
+            start -= surplus;
+        }
+
+        console.log(start);
+        // Calculate whether a start or an end ellipsis should be added
+        const rightPad = currentPage + innerWidth;
+        let end = rightPad > 3 ? rightPad : 2;
+
+        console.log(rightPad);
+
+        const addEndEllipsis = rightPad <= totalPages;
 
         if (addEndEllipsis) {
-            innerWidth -= 1;
-        }
-
-        let max = totalPages;
-        let start = Math.max(currentPage - preCurrent, 2);
-
-        if (start + innerWidth > max) {
-            while (start + innerWidth > max) {
-                start--;
-            }
+            innerWidth -= 2;
         }
 
         append(
@@ -61,7 +75,7 @@ const settings = {
         );
 
         if (addStartEllipsis) {
-            append(parent, createEllipsis());
+            append(parent, createEllipsis("..."));
         }
 
         for (let page = start; page <= start + innerWidth - 1; page++) {
@@ -74,7 +88,7 @@ const settings = {
         }
 
         if (addEndEllipsis) {
-            append(parent, createEllipsis());
+            append(parent, createEllipsis("..."));
         }
 
         append(

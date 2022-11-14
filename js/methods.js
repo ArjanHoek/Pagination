@@ -16,10 +16,10 @@ const methods = {
 
         return btn;
     },
-    createEllipsis: () => {
+    createEllipsis: (content) => {
         const ellipsisEl = document.createElement("span");
         ellipsisEl.classList.add("pagination-ellipsis");
-        ellipsisEl.textContent = "...";
+        ellipsisEl.textContent = content || "...";
         return ellipsisEl;
     },
     append: (parent, ...children) =>
@@ -29,4 +29,5 @@ const methods = {
         const { origin, pathname } = window.location;
         window.location = origin + pathname + `?page=${page}`;
     },
+    calcDefaultPreCurrent: (innerWidth) => Math.floor((innerWidth - 2) / 2),
 };
